@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="id">
+<head>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700&family=Fredoka:wght@500;700&display=swap" rel="stylesheet">
+
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>3 jadi Magic</title>
+
+
+</head>
+<body>
+  <div class="page">
+    <div class="panel" id="panel">
+      <div class="glitter" id="glitter"></div>
+
+      <h1>🌸 AYO MAIN TIGA JADI 🌸</h1>
+      <p class="subtitle">Game Sehat Anti BrainRoot.</p>
+
+      <div class="controls" aria-hidden="false">
+        <select id="modeSelect" title="Pilih mode permainan">
+          <option value="pvp">👭 VS Player</option>
+          <option value="aiEasy">🤖 VS COM — Mudah</option>
+          <option value="aiMed">🤖 VS COM — Sedang</option>
+          <option value="aiHard">🤖 VS COM — Syulit</option>
+        </select>
+
+        <select id="firstSelect" title="Siapa mulai">
+          <option value="player">Pemain mulai</option>
+          <option value="com">COM lawan mulai</option>
+        </select>
+
+        <button class="btn" id="startBtn">Mulai</button>
+      </div>
+
+      <div class="board-area" role="region" aria-label="Arena permainan">
+        <div id="turn" aria-live="polite">Siap</div>
+        <div id="game" role="grid" aria-label="Papan 3x3"></div>
+        <div class="bottom-row">
+          <button class="btn ghost" id="undoBtn">↶ Undo</button>
+          <button class="btn" id="resetBtn">🔄 Reset</button>
+          <button class="btn ghost" id="muteBtn">🔈</button>
+        </div>
+        <div style="height:6px"></div>
+        <div class="small" id="note">Aturan geser cuma 1 kotak. Jika lebih dari 10 gerakan tanpa pemenang, pion tengah harus keluar.</div>
+      </div>
+    </div>
+  </div>
+
+<!-- Sounds -->
+<audio id="popSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_7e5dff0e2f.mp3" preload="auto"></audio>
+<audio id="slideSound" src="https://cdn.pixabay.com/audio/2021/08/04/audio_1c5171d6cf.mp3" preload="auto"></audio>
+<audio id="winSound" src="https://cdn.pixabay.com/audio/2021/12/11/audio_7ee7be24d6.mp3" preload="auto"></audio>
+<audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_2b3f6b2e7a.mp3?filename=gentle-music-loop-11070.mp3" preload="auto" loop></audio>
+
+
+
+
+
+
+
+</body>
+</html>
