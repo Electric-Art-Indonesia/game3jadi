@@ -1,13 +1,3 @@
-
-/* Magical Princess Duel 3x3 — Full logic:
-   - 3x3 board, two players X (player) & O (com)
-   - Each player may place up to 3 tokens. After both have 3, movement phase starts.
-   - Movement: move ONE of your tokens to an adjacent empty cell (8 directions).
-   - If moveCount >= 10 and no winner: if center occupied, center becomes empty.
-   - Modes: pvp, aiEasy, aiMed, aiHard. COM obeys same rules.
-   - Undo, animations, sounds, glitter on win.
-*/
-
 const gameEl = document.getElementById('game');
 const turnEl = document.getElementById('turn');
 const modeSelect = document.getElementById('modeSelect');
@@ -26,7 +16,7 @@ const bgMusic = document.getElementById('bgMusic');
 
 let muted = false;
 let board = Array(9).fill(null); // null or icon
-const cuteIcons = ["🐱","🐶","⭐","❤️"];
+const cuteIcons = [ "🐱","🐶","🐰","🐼","🦊","🐸","🐯","🐵","⭐","🌟","✨","💎","❤️","💛","💚","💜", "🍭","🍬","🎈","🎀","🎁","🧸","☀️","🌙","⚡","🔥","❄️","🌸","🍀"];
 let playerIcons = { X: null, O: null }; // X = human player, O = opponent (player2 or COM)
 let current = 'X'; // 'X' or 'O'
 let mode = 'pvp'; // pvp / aiEasy / aiMed / aiHard
@@ -39,6 +29,11 @@ let gameOver = false;
 let aiThinking = false;
 let centerOnlyMode = false; 
 let lastAIMove = null; 
+let lastMove = {
+  X: null,
+  O: null
+};
+
 
 // neighbors map
 const neighbors = {
@@ -175,6 +170,12 @@ function onCellClick(i){
 
   // clicked empty cell -> check if neighbor of selectedPiece
   if(!board[i] && neighbors[selectedPiece].includes(i)){
+      
+      const lm = lastMove[current];
+          if(lm && lm.from === i && lm.to === selectedPiece){
+            return; // ⛔ anti gerak periodik
+          }
+          
     pushHistory();
     // move with animation
     const sourceIdx = selectedPiece;
@@ -182,6 +183,8 @@ function onCellClick(i){
     board[destIdx] = board[sourceIdx];
     board[sourceIdx] = null;
     selectedPiece = null;
+    lastMove[current] = { from: sourceIdx, to: destIdx };
+
     
         if(centerOnlyMode && sourceIdx === 4){
         centerOnlyMode = false;
@@ -190,7 +193,7 @@ function onCellClick(i){
     
     moveCount++;
     playSound(slideSound);
-        if(moveCount >= 19 && board[4]){
+        if(moveCount >= 100 && board[4]){
           centerOnlyMode = true;
         }
     // quick animate dest
@@ -250,6 +253,7 @@ function startNew(){
   board = Array(9).fill(null);
   placed = { X:0, O:0 };
   selectedPiece = null;
+  lastMove = { X: null, O: null };
   moveCount = 0;
   gameOver = false;
   panel.classList.remove('win');
@@ -389,14 +393,14 @@ function aiPlay(modeStr){
   else {
     const myIcon = playerIcons.O;
     let moves = collectAllMovesFor(myIcon, board);
-            if (lastAIMove) {
+            if (lastMove.O) {
           moves = moves.filter(m =>
-            !(m.from === lastAIMove.to && m.to === lastAIMove.from)
+            !(m.from === lastMove.O.to && m.to === lastMove.O.from)
           );
         }
 
         const centerOwner = ownerOfCenter();
-            if(moveCount >= 19 && centerOwner === current){
+            if(moveCount >= 100 && centerOwner === current){
               // jika player klik pion BUKAN tengah → ignore
               if(selectedPiece !== null && selectedPiece !== 4) return;
             }
@@ -426,7 +430,7 @@ function aiPlay(modeStr){
         board[m.to] = board[m.from];
         board[m.from] = null;
         moveCount++;
-        lastAIMove = { from: m.from, to: m.to };
+        lastMove.O = { from: m.from, to: m.to };
 
         playSound(slideSound);
         gameEl.children[m.to].classList.add('move-anim');
@@ -452,7 +456,7 @@ function aiPlay(modeStr){
       if(!bad){
         pushHistory();
         board[m.to] = board[m.from];
-        lastAIMove = { from: m.from, to: m.to };
+        lastMove.O = { from: m.from, to: m.to };
 
         board[m.from] = null;
         moveCount++;
@@ -471,7 +475,7 @@ function aiPlay(modeStr){
     board[m.to] = board[m.from];
     board[m.from] = null;
     moveCount++;
-    lastAIMove = { from: m.from, to: m.to };
+    lastMove.O = { from: m.from, to: m.to };
 
     playSound(slideSound);
     gameEl.children[m.to].classList.add('move-anim');
@@ -651,4 +655,3 @@ bgMusic.loop = true;
 try{ bgMusic.play(); }catch(e){}
 
 /* END SCRIPT */
-
